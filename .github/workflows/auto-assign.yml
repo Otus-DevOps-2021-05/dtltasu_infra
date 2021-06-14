@@ -1,4 +1,4 @@
-name: Run tests for OTUS homework
+name: Auto Assign
 
 on:
   push:
