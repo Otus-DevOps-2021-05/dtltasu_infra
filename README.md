@@ -12,6 +12,7 @@ Connecting with alias:
                HostName 10.129.0.12                               # address remote host
                User appuser                                       # user for connect
                ProxyCommand ssh appuser@178.154.227.171 nc %h %p  #command for conneting  (or  ProxyCommand ssh appuser@178.154.227.171 -W %h:%p)
+       3. Alias for connecting = ssh someinternalhost
 
 Conf OpenVpn:
      bastion_IP = 178.154.227.171
