@@ -20,3 +20,6 @@ Conf OpenVpn:
      user = test
      key = 6214157507237678334670591556762
      profile for connect = cloud-bastion.ovpn
+
+
+Access to pritnul https://178-154-227-171.sslip.io with ssl
