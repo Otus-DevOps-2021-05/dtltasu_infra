@@ -3,8 +3,8 @@ dtltasu Infra repository
 
 
 ### Lesson 6 ###
-tetapp_IP=178.154.252.211
-testapp_port= 9292
+tetapp_IP = 178.154.252.211
+testapp_port = 9292
 
 yc compute instance create \
   --name reddit-app \
