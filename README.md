@@ -1,9 +1,6 @@
 # dtltasu_infra
 dtltasu Infra repository
 
-
-
-
 ### Lesson 6 ###
 testapp_IP = 178.154.252.211
 testapp_port = 9292
