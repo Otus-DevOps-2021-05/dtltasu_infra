@@ -2,6 +2,26 @@
 dtltasu Infra repository
 
 
+### Lesson 6 ###
+tetsapp_IP=178.154.252.211
+testapp_port= 9292
+
+yc compute instance create \
+  --name reddit-app \
+  --hostname reddit-app \
+  --memory=4 \
+  --create-boot-disk image-folder-id=standard-images,image-family=ubuntu-1604-lts,size=10GB \
+  --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
+  --metadata serial-port-enable=1 \
+  --metadata-from-file user-data=start_up_script.sh
+  --ssh-key ~/.ssh/appuser.pub
+
+
+____________________________________________________________
+
+
+
+
 
 Connecting with one command: ssh -A -t appuser@178.154.227.171 ssh -A 10.129.0.12
 
