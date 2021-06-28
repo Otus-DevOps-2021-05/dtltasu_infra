@@ -1,6 +1,57 @@
 # dtltasu_infra
 dtltasu Infra repository
 
+### Lesson 7 ###
+Установили Packer
+Создали сервисный аккаунт для  yc
+    SVC_ACCT="service"
+FOLDER_ID="abcde"
+yc iam service-account create --name $SVC_ACCT --folder-id $FOLDER_ID
+
+Выдали права для folder_id (folder_id узнали - yc config list)
+  ACCT_ID=$(yc iam service-account get $SVC_ACCT | \
+     grep ^id | \
+     awk '{print $2}')
+
+  yc resource-manager folder add-access-binding --id $FOLDER_ID \
+     --role editor \
+     --service-account-id $ACCT_ID
+Создали key file для сервисного аакаунта
+   yc iam key create --service-account-id $ACCT_ID --output <вставьте свой путь>/key.json
+
+Для проверки шаблонов сборки ВМ используется команда
+  packer validate ./<FILE_NAME>.json
+
+ДЛя сборки образа
+   packer build ./<FILE_NAME>.json
+
+Создали шаблон ubuntu16.json для сборки базового образа
+Ruby не устанавливался пока в скрипт не добавил строчку "sleep 1"
+
+Cоздал файлы с переменными  variables.json и variables.json.example
+
+На основе ubuntu16.json создал immutable.json
+Для запекания образа уже с установленным приложением (для установки приложения использовалась офф документация "puma")
+Puma не хотела запускатсья, как сервис, после установки паке apt-get install -y policykit-1 ошибка ушла
+
+
+В immutable.json добавлен шаг с установкой приложения
+
+Создан скрипт для создания инстанса с установленным приложением из CLI /config-scripts/create-reddit-vm-sh
+В скрипт только необходимо добавить id образа который создается из шаблона immutable.json
+
+
+
+Для проверки нужно скриптом create-reddit-vm-sh создать инстанс
+предварительно подставив в него id image
+перейти по адресу <EXTERNAL_IP>:9292
+
+
+
+
+
+
+
 ### Lesson 6 ###
 testapp_IP = 178.154.252.211
 testapp_port = 9292
