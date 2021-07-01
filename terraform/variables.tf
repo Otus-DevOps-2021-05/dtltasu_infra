@@ -30,3 +30,8 @@ variable service_account_key_file {
 variable private_key_path {
   description = "path to private key"
 }
+
+variable instances {
+  description = "count instance"
+  default     = 1
+}
