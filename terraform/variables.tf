@@ -5,12 +5,12 @@ variable folder_id {
   description = "Folder"
 }
 variable region_id {
-  description = "Zone"
+  description = "region"
   # Значение по умолчанию
-  default = "ru-central1-a"
+  default = "ru-central1"
 }
-variable zone {
-  description = "Zone"
+variable zone_id {
+  description = "zone"
   default = "ru-central1-a"
 }
 variable public_key_path {
