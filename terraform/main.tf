@@ -7,7 +7,7 @@ provider "yandex" {
 }
 
 resource "yandex_compute_instance" "app" {
-  name = "reddit-app-terraform"
+  name = "reddit-app"
 
   resources {
     cores  = 2
