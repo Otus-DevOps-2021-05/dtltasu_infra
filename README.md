@@ -1,6 +1,155 @@
 # dtltasu_infra
 dtltasu Infra repository
 
+### Lesson 8 ###
+
+1 создаем ветку terraform-1
+2 устанавливаем терраформ по инструкции для нашей ОС
+3 создаем сервисный аакаунт для terraform
+yc iam service-account create --name terraform --folder-id b1gm9eibqggfmlau7l0q
+ yc iam service-account get terraform | \
+ grep ^id | \
+awk '{print $2}'
+yc resource-manager folder add-access-binding --id b1gm9eibqggfmlau7l0q \
+--role editor \
+4 добавляем переменную для ключа export YC_SERVICE_ACCOUNT_KEY_FILE=$HOME/lessons/terraform.json
+5 заполянем main.tf после инициализации, пробуем создать инстанс terraform init && terraform apply
+получаем ошибку на не корректное кол-во ресурсов меняфем cores 2
+6 после попытки подключиться по ssh поулчаем ошибку доступа, в файл main.tf добавляем параметр
+metadata = {
+   ssh-keys= "ubuntu:${file("~/.ssh/ubuntu.pub")}"
+}
+
+7 Для вывода параметров созданных инстансов создаем файл outputs.ts , данные выводятся командой terraform output
+8 Настраиваем првиожионеры один для работы с файлами, а второй для запуска комманд
+
+provisioner "file" {
+    source      = "files/puma.service"
+    destination = "/tmp/puma.service"
+  }
+
+provisioner "remote-exec" {
+  script = "files/deploy.sh"
+}
+
+для работы провижионеров создаем радел connection
+
+connection {
+  type  = "ssh"
+  host  = yandex_compute_instance.app.network_interface.0.nat_ip_address
+  user  = "ubuntu"
+  agent = false
+  # путь до приватного ключа
+  private_key = file("~/.ssh/yc")
+}
+
+9 создаем файл для описания переменных variables.tf
+
+variable region_id {
+  description = "region"
+  # Значение по умолчанию
+  default = "ru-central1"
+можно указать данный для использования по умолчанию
+
+10 созданем файл для определения переменных terraform.tfvars
+
+region_id                = "ru-central1"
+
+11 переносим переменный в файл main.tf
+
+region_id = var.region_id
+
+Задание со **
+
+1 Создаем файл lb.tf
+2 Сначала нужно создать таргет группу для подключения к балансировщику
+resource "yandex_lb_target_group" "loadbalancer" {
+  name       = "lb-group"
+  region_id  = var.region_id
+  folder_id  = var.folder_id
+
+
+  dynamic "target" {
+      for_each  = yandex_compute_instance.app.*.network_interface.0.ip_address
+      content {
+          subnet_id = var.subnet_id
+          address   = target.value
+      }
+  }
+
+3 Создаем ресур самого балансировщика
+resource "yandex_lb_network_load_balancer" "lb"{
+    name = "loadbalancer"
+    type = "external"
+
+
+    listener {
+        name        = "listener"
+        port        = 80
+        target_port = 9292
+
+        external_address_spec {
+            ip_version = "ipv4"
+        }
+    }
+
+4 Приатачиваем группу к балансировщику
+attached_target_group {
+        target_group_id = yandex_lb_target_group.loadbalancer.id
+
+        healthcheck {
+            name    = "tcp"
+            tcp_options {
+                port = 9292
+            }
+        }
+    }
+
+5 В отутпутс добавляем данные для вывода балансировщика
+output "external_ip_address_lb" {
+  value = yandex_lb_network_load_balancer.lb.listener.*.external_address_spec[0].*.address
+}
+
+6 Создаем еще один инстанс с аналогичными параметрами первого,чтоб балансировщику было между кем переключаться, меняем только имя
+7 новый инстанс добаляем в таргет группу
+(все данные оставил закомменчиными в файлах)
+
+8 в отпутс меняем данные для вывода двух инстансов
+output "external_ip_address_app" {
+  value = yandex_compute_instance.app[*].network_interface.0.nat_ip_address
+}
+
+9 Т.к. копировать одинаковые инстансы в файлах не очень удобно, будем их создавать через переменною count
+
+в variables добавляем
+
+variable instances {
+  description = "count instance"
+  default     = 1
+}
+
+второй инстанс можно удалить и поправить первый
+
+resource "yandex_compute_instance" "app" {
+  count = var.instances
+  name = "reddit-app-${count.index}"
+
+connection {
+
+    host  = self.network_interface.0.nat_ip_address
+параметр self указывает на родителький параметр resource resource -- "yandex_compute_instance" "app"
+
+через dynamic и for-each правим target балансировщика
+
+dynamic "target" {
+      for_each  = yandex_compute_instance.app.*.network_interface.0.ip_address
+      content {
+          subnet_id = var.subnet_id
+          address   = target.value
+      }
+  }
+
+
 ### Lesson 7 ###
 Установили Packer
 Создали сервисный аккаунт для  yc

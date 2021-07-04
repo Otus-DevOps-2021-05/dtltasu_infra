@@ -1,0 +1,8 @@
+cloud_id = "b1gl"
+folder_id = "b1gm"
+region_id = "ru-central1-a"
+image_id = "fd8h7"
+public_key_path = "path to key *.pub"
+service_account_key_file = "name.json"
+subnet_id = "e9bt"
+private_key_path = "~/.ssh/ubuntu"
