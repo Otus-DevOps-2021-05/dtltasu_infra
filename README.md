@@ -1,6 +1,132 @@
 # dtltasu_infra
 dtltasu Infra repository
 
+### Lesson 9 ###
+1 Создал ветку terrform-2
+2 Создал  IP для внешнего ресурса в main.tf
+  resource "yandex_vpc_network" "app-network" {
+name = "reddit-app-network"
+}
+resource "yandex_vpc_subnet" "app-subnet" {
+name = "reddit-app-subnet"
+zone = "ru-central1-a"
+network_id = "${yandex_vpc_network.app-network.id}"
+v4_cidr_blocks = ["192.168.10.0/24"]
+}
+
+3 В создание инстанса добавили данныйе о созданных ресурсах
+  network_interface {
+    subnet_id = yandex_vpc_subnet.app-subnet.id
+    nat = true
+  }
+
+4 Создаем два шаблона для app и db (*.json) на основе ubuntu16.json, в файлах меняем image_(name, family) и disk name
+5 Билдимс новые образы
+ packer build -var-file=./variables.json ./app.json
+ packer build -var-file=./variables.json ./db.json
+
+6 Разбили основной файл main.tf на две части app.tf and db.tf
+7 Определили новые переменные и бобзначили их
+   variable app_disk_image {
+  description = "disk image for reddit app"
+  default     = "reddit-app-base"
+  }
+   variable db_disk_image {
+  description = "disk image for mongodb"
+  default     = "reddit-db-base"
+
+
+   app_disk_image            = "reddit-app-base"
+   db_disk_image             = "reddit-db-base"
+
+8 Вносим описание ресурсов в app and db  *.tf в main- файле оставется только блок с provider
+9 В outputs .yf вставляем новые данные
+   output "external_ip_address_app" {
+  value = yandex_compute_instance.app.network_interface.0.nat_ip_address
+}
+output "external_ip_address_db" {
+  value = yandex_compute_instance.db.network_interface.0.nat_ip_address
+}
+
+
+10 Для модульной структуры создаем папки modules/app modules/db в папке terraform в каждой папке создаем структуру файлов
+main.tf outputs.tf variables.tf по аналогии с папкой terraform и вносим изменения
+
+11 из директории terraform удаляем  app.tf, db.tf и vpc.tf
+12 в файле main указываем использование модулей
+    module "app" {
+  source          = "./modules/app"
+  public_key_path = var.public_key_path
+  app_disk_image  = var.app_disk_image
+  subnet_id       = var.subnet_id
+}
+
+module "db" {
+  source          = "./modules/db"
+  public_key_path = var.public_key_path
+  db_disk_image   = var.db_disk_image
+  subnet_id       = var.subnet_id
+}
+
+затем необходимо загрузить модули  terraform get
+
+13 Для преиспользования модулей создаем папки prod and stage и копируем туда основные файлы и корректиреум их под свое окружение/
+
+Задание со * :
+Для смоздания хранилище нам необходимо создать сервисный аккаунт или создать для существующего статический ключ доступа yc iam access-key create --service-account-name my-robot
+сохраняем идентификатор key_id и секретный ключ secret они будут показаны один раз и будут необходимы для бакета
+для создания бакета создаем файл в дериктории терраформ storage-backet.tf
+  provider "yandex" {
+  version                  = "~> 0.43"
+  service_account_key_file = var.service_account_key_file
+  cloud_id                 = var.cloud_id
+  folder_id                = var.folder_id
+  zone                     = var.zone_id
+}
+
+#resource "yandex_vpc_network" "app-network" {
+#  name = "reddit-app-network"
+#}
+
+#resource "yandex_vpc_subnet" "app-subnet" {
+#  name           = "reddit-app-subnet"
+#  zone           = "ru-central1-a"
+#  network_id     = "${yandex_vpc_network.app-network.id}"
+#  v4_cidr_blocks = ["192.168.10.0/24"]
+#}
+
+resource "yandex_storage_bucket" "aireshilov" {
+  access_key = var.key_id
+  secret_key = var.secret_key
+  bucket = var.bucket_name
+}
+
+после этого в каждой папке модулей создаем файл backend.tf  с указанием бакенда
+  terraform {
+  backend "s3" {
+      endpoint = "storage.yandexcloud.net"
+      bucket   = "aireshilov"
+      key      = "stage/terraform.tfstate"
+      region   = "ru-central1"
+      access_key = "SKKWZ-bgZLxvBhCocc3Y"
+      secret_key = "QEO5pVAqPYHxgNI1WnPiFY8GCvH5-snswdhhdOPW"
+      skip_region_validation      = true
+      skip_credentials_validation = true
+  }
+}
+
+После этого файл terraform.tfstate можно удалять
+
+14  Задание с **
+ Возвращаем /files в модуль app
+ для того чтоб app получило доступ к db
+в puma.service добавляем переменную DATABASE_URL которую получаем из outputs модуля db внешний ип адресс и подсовываем
+listener mongodb определяет через парметр bindIp: его мы меняем через sed в провижионере db main.tf
+
+
+
+
+
 ### Lesson 8 ###
 
 1 создаем ветку terraform-1

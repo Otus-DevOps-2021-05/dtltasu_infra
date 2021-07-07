@@ -57,3 +57,8 @@ variable secret_key {
 variable bucket_name {
   description = "name bucket"
 }
+
+variable db_nat_ip_address {
+  description = "db ip address"
+  default     = "N/A"
+}

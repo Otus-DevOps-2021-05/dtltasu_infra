@@ -54,6 +54,11 @@ variable secret_key {
   description = "access key secret"
 }
 
-variable bucket_name {
-  description = "name bucket"
+variable backet_name {
+  description = "name backet"
+}
+
+variable db_nat_ip_address {
+  description = "db ip address"
+  default     = "N/A"
 }
