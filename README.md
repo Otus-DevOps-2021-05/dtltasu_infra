@@ -117,8 +117,11 @@ resource "yandex_storage_bucket" "aireshilov" {
 
 После этого файл terraform.tfstate можно удалять
 
-
-
+14  Задание с **
+ Возвращаем /files в модуль app
+ для того чтоб app получило доступ к db
+в puma.service добавляем переменную DATABASE_URL которую получаем из outputs модуля db внешний ип адресс и подсовываем
+listener mongodb определяет через парметр bindIp: его мы меняем через sed в провижионере db main.tf
 
 
 
