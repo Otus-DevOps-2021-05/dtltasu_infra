@@ -57,3 +57,8 @@ variable secret_key {
 variable backet_name {
   description = "name backet"
 }
+
+variable db_nat_ip_address {
+  description = "db ip address"
+  default     = "N/A"
+}
