@@ -1,6 +1,42 @@
 # dtltasu_infra
 dtltasu Infra repository
 
+### Lesson 10 ###
+1. Создали папку и  ветку для работы с ansible
+2. Проверили установку python and pip
+3. Создали файл  requirements.txt с рекомендуемой версией ansible и установили ансибле
+   pip install -r requirements.txt
+4. Подняли два инстанса  cd terraform/stage; terraform apply
+5. Создали простой файл inventory
+  appserver ansible_host=***.***.***.*** ansible_user=appuser ansible_private_key_file=~/.ssh/appuser
+6. Проверили подключение и работу ансибле с инстансами
+  ansible appserver -i ./inventory -m ping
+7. Создали файл ansible.cfg и перенесли туда данные о подключении. пользователя, файла инвент и тд для упрощенной работы.
+8. Удалили перенесенную инфу из файла инвентори и проверили работу комманд ansible dbserver -m command -a uptime
+9. Сформировали новый файл  inventory.yml и указали его в  *.cfg проверили работу ansible dbserver -m command -a uptime
+10. Пишщем первый плейбук clone.yml и запускаем ansible-playbook clone.yml
+11. после клонирования запускаем команду  для удаления склонированного ansible app -m command -a 'rm -rf ~/reddit'
+12. Запускаем плейбук еще раз, клонирование прошло успешно т.к. папка была удалена предыдущей командой
+
+Задание  со  звездочкой
+Нашел готовое решение для данной задачи с генерацие на лету, но решил его не использвать ))
+создал json файл командой ansible-inventory -i ./inventory.yml --list --output=./inventory.json
+
+и создал скрипт для испольования этого фалйла
+#!/bin/bash
+if [ $# -eq 0 ]
+  then
+  echo "Usage: script --list"
+  exit 1
+fi
+if [ $1 = "--list" ]
+  then
+  cat ./inventory.json
+fi
+
+
+
+
 ### Lesson 9 ###
 1 Создал ветку terrform-2
 2 Создал  IP для внешнего ресурса в main.tf
