@@ -1,6 +1,6 @@
 # dtltasu_infra
 
-[![Build Status](https://travis-ci.org/ali-irawan/xtra.svg?branch=master)](https://travis-ci.org/ali-irawan/xtra)
+![AppVeyor](https://img.shields.io/appveyor/build/dtltasu/git@github.com:Otus-DevOps-2021-05/dtltasu_infra.git?style=flat-square)
 
 dtltasu Infra repository
 ### Lesson 12 ###
