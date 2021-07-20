@@ -2,6 +2,8 @@
 
 ![AppVeyor](https://img.shields.io/appveyor/build/dtltasu/git@github.com:Otus-DevOps-2021-05/dtltasu_infra.git?style=flat-square)
 
+[![Run tests for OTUS homework](https://github.com/Otus-DevOps-2021-05/dtltasu_infra/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Otus-DevOps-2021-05/dtltasu_infra/actions/workflows/run-tests.yml)
+
 dtltasu Infra repository
 ### Lesson 12 ###
 1. Создали ветку ansible-3
