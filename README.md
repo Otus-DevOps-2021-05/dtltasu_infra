@@ -1,4 +1,7 @@
 # dtltasu_infra
+
+[![Build Status](https://travis-ci.org/ali-irawan/xtra.svg?branch=master)](https://travis-ci.org/ali-irawan/xtra)
+
 dtltasu Infra repository
 ### Lesson 12 ###
 1. Создали ветку ansible-3
@@ -32,7 +35,7 @@ vault_password_file = vault.key
 без включения допольнительных настроек
 15. Задание со * на динамик инвентри делать не стал, т.к.  нет нормального дин инвентори,
 планирую доделать после.
-
+16. Добавлены првоерки и бейдж
 
 
 
