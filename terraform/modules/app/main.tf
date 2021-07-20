@@ -31,14 +31,14 @@ resource "yandex_compute_instance" "app" {
     private_key = file(var.private_key_path)
   }
 
-  provisioner "file" {
-    content     = templatefile("${path.module}/files/puma.service", { DB_NAT_IP_ADDRESS = var.db_nat_ip_address})
-    destination = "/tmp/puma.service"
-  }
+#  provisioner "file" {
+#    content     = templatefile("${path.module}/files/puma.service", { DB_NAT_IP_ADDRESS = var.db_nat_ip_address})
+#    destination = "/tmp/puma.service"
+#  }
 
-  provisioner "remote-exec" {
-    script = "${path.module}/files/deploy.sh"
-  }
+#  provisioner "remote-exec" {
+#    script = "${path.module}/files/deploy.sh"
+#  }
 
 
 }

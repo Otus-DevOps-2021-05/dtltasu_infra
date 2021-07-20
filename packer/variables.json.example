@@ -1,5 +1,5 @@
 {
-	"key": "./key.json",
+	"key": "packer/key.json",
 	"folder_id": "qwerty",
 	"image": "ubuntu-1604-lts",
     "platform_id": "standard-v1"
