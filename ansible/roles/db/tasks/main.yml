@@ -5,7 +5,7 @@
     msg: "This host is in {{ env }} environment!!!"
 
 - include: install_mongo.yml
-- include: config_mongo.yml    
+- include: config_mongo.yml
 
 #- name: Change mongo config file
 #  template:
