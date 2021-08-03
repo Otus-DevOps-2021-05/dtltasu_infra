@@ -5,8 +5,8 @@
             "service_account_key_file": "{{ user `key` }}",
             "folder_id": "{{ user `folder_id` }}",
             "source_image_family": "{{ user `image` }}",
-            "image_name": "reddit-app-base-new-{{timestamp}}",
-            "image_family": "reddit-app-base-new",
+            "image_name": "reddit-app-base-{{timestamp}}",
+            "image_family": "reddit-app-base",
             "ssh_username": "ubuntu",
             "platform_id": "{{ user `platform_id` }}",
             "use_ipv4_nat": "true"
@@ -16,7 +16,9 @@
     "provisioners": [
         {
             "type": "ansible",
-            "playbook_file": "ansible/playbooks/packer_app.yml"
+            "playbook_file": "ansible/playbooks/packer_app.yml",
+            "extra_arguments": ["--tags","ruby"],
+            "ansible_env_vars": ["ANSIBLE_ROLES_PATH={{ pwd }}/ansible/roles"]
         }
 
     ]

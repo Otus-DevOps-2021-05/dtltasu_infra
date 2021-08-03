@@ -5,6 +5,56 @@
 [![Run tests for OTUS homework](https://github.com/Otus-DevOps-2021-05/dtltasu_infra/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Otus-DevOps-2021-05/dtltasu_infra/actions/workflows/run-tests.yml)
 
 dtltasu Infra repository
+### Lesson 13 ###
+1. Установили vagrant
+команды  запускать в папке ansible                
+vagrant up                  
+vagrant box list            
+vagrant status              
+vagrant ssh appserver      
+vagrant provision appserver 
+vagrant destroy -f          
+
+2. Описали создание в VagrantFile создание двух инстансов
+3. В ansible/Vagrantfile добавили провижионинг для работы с Ansible
+4. Добавлена роль base с установкой python
+5. Доработана роль DB
+6. Доработали роль app
+7. Доработали playbook Deploy.yml
+8. Поверили работу, все создается и открывается
+
+Задание со *
+ для работы приложения на 80 порту настроили проксирование 
+ в Vagrantfile в блок ansible.extra_vars добавили extra_vars
+ nginx_sites: {
+          default: ["listen 80", "server_name 'reddit'", "location / {proxy_pass http://127.0.0.1:9292;}"]
+        }    
+
+9. Через ansible/requirements.txt установили все необходимые пакеты
+pip install -r requirements.txt
+10. Создал окружение через venv
+11. С помошью команды создается заготовки для тестирования ролей
+molecule init scenario --scenario-name default -r db -d vagrant
+12. Добавлены и проверены тесты для роли DB
+команды  
+ansible/roles/db   каталог в котором надо запускать
+molecule create             
+molecule list               
+molecule login -h instance  
+molecule converge           
+molecule verify            
+molecule destroy
+13. Написан тест для проверки порта 27017
+14. Использовали роли db и app в плейбуках packer_db.yml и
+packer_app.yml. проверили. что все работает. как и раньше
+
+Задание со * 
+Вынесли роль db в отедльные репо https://github.com/dtltasu/for-otus-db
+в requirements.yml добавлена ссылка на роль, в playbook имя роли не меняли т.к его сотавили прежним
+установка роли ansible-galaxy install -r environments/stage/requirements.yml
+
+
+
 ### Lesson 12 ###
 1. Создали ветку ansible-3
 2. Создали роли для  app and db окружения
